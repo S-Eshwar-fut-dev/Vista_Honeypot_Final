@@ -1,0 +1,15 @@
+node_modules/
+npm-debug.log*
+.npm
+.pids
+*.pid
+*.seed
+*.pid.lock
+coverage/
+.nyc_output/
+lib-cov/
+*.log
+test/*.log
+*.lock
+package-lock.json
+.env
