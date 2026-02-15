@@ -280,8 +280,9 @@ async function buildFinalReport(
 
   const finalPayload = {
     sessionId: sessionId,
+    status: "success",
     scamDetected: session.scamDetected,
-    totalMessagesExchanged: totalMessages,
+    scamType: session.scamType,
     extractedIntelligence: {
       bankAccounts: session.extracted.bankAccounts,
       upiIds: session.extracted.upiIds,
@@ -289,6 +290,10 @@ async function buildFinalReport(
       phoneNumbers: session.extracted.phoneNumbers,
       emailAddresses: session.extracted.emailAddresses,
       suspiciousKeywords,
+    },
+    engagementMetrics: {
+      totalMessagesExchanged: session.totalMessagesExchanged,
+      engagementDurationSeconds: engagementDurationSeconds,
     },
     agentNotes: session.notes.join(" | "),
   };
@@ -310,15 +315,5 @@ async function buildFinalReport(
   }
 
   // Return response to conversation endpoint as well
-  return {
-    status: "success",
-    scamDetected: session.scamDetected,
-    scamType: session.scamType || "generic",
-    extractedIntelligence: session.extracted,
-    engagementMetrics: {
-      totalMessagesExchanged: totalMessages,
-      engagementDurationSeconds,
-    },
-    agentNotes: session.notes.join(" | "),
-  };
+  return finalPayload;
 }
