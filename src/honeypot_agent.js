@@ -1,5 +1,6 @@
 import OpenAI from "openai";
 import dotenv from "dotenv";
+import axios from "axios";
 
 dotenv.config();
 
@@ -42,7 +43,12 @@ export async function handleMessage(body) {
   session.turnCount += 1;
 
   if (session.finalTriggered) {
-    return buildFinalReport(session, conversationHistory, message);
+    return await buildFinalReport(
+      session,
+      conversationHistory,
+      message,
+      sessionId,
+    );
   }
 
   // Single GPT Call Per Turn
@@ -68,7 +74,12 @@ export async function handleMessage(body) {
   // Decide if final report should be triggered
   if (session.scamDetected && session.turnCount > 5) {
     session.finalTriggered = true;
-    return buildFinalReport(session, conversationHistory, message);
+    return await buildFinalReport(
+      session,
+      conversationHistory,
+      message,
+      sessionId,
+    );
   }
 
   return {
@@ -197,13 +208,58 @@ function mergeExtraction(existing, incoming) {
   }
 }
 
-function buildFinalReport(session, conversationHistory, latestMessage) {
-  const totalMessages = conversationHistory.length + 1; // including latest
+async function buildFinalReport(
+  session,
+  conversationHistory,
+  latestMessage,
+  sessionId,
+) {
+  const totalMessages = conversationHistory.length + 1;
 
   const engagementDurationSeconds = Math.floor(
     (Date.now() - session.startTime) / 1000,
   );
 
+  const suspiciousKeywords = [
+    "urgent",
+    "verify",
+    "blocked",
+    "otp",
+    "transfer",
+    "immediately",
+  ];
+
+  const finalPayload = {
+    sessionId: sessionId,
+    scamDetected: session.scamDetected,
+    totalMessagesExchanged: totalMessages,
+    extractedIntelligence: {
+      bankAccounts: session.extracted.bankAccounts,
+      upiIds: session.extracted.upiIds,
+      phishingLinks: session.extracted.phishingLinks,
+      phoneNumbers: session.extracted.phoneNumbers,
+      suspiciousKeywords,
+    },
+    agentNotes: session.notes.join(" | "),
+  };
+
+  try {
+    await axios.post(
+      "https://hackathon.guvi.in/api/updateHoneyPotFinalResult",
+      finalPayload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
+    );
+
+    console.log("✅ Successfully sent final result to GUVI");
+  } catch (err) {
+    console.error("❌ Failed to send final result to GUVI:", err.message);
+  }
+
+  // Return response to conversation endpoint as well
   return {
     status: "success",
     scamDetected: session.scamDetected,
@@ -213,6 +269,6 @@ function buildFinalReport(session, conversationHistory, latestMessage) {
       totalMessagesExchanged: totalMessages,
       engagementDurationSeconds,
     },
-    agentNotes: session.notes.join(" || "),
+    agentNotes: session.notes.join(" | "),
   };
 }
