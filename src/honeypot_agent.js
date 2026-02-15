@@ -292,7 +292,7 @@ async function buildFinalReport(
       suspiciousKeywords,
     },
     engagementMetrics: {
-      totalMessagesExchanged: session.totalMessagesExchanged,
+      totalMessagesExchanged: totalMessages,
       engagementDurationSeconds: engagementDurationSeconds,
     },
     agentNotes: session.notes.join(" | "),
