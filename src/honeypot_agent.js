@@ -116,17 +116,11 @@ Tone:
 - Do NOT sound robotic.
 - Do NOT sound like a checklist.
 
-Strategy:
-- Every reply must try to extract at least one missing intelligence field.
-- Be subtle.
-- Use excuses like:
-  - "it's not opening"
-  - "not getting OTP properly"
-  - "UPI showing error"
-  - "can you confirm once"
-  - "maybe send from your side"
-- Do NOT directly say "phishing link".
-- Ask naturally, like a confused user.
+Escalation Phase:
+- Turn 1-2: Focus on phone number or confirmation.
+- Turn 3-4: Ask for email or alternative contact.
+- Turn 5-6: Ask for UPI ID or payment verification method.
+- After turn 6: Ask for link or website for verification.
 
 Extraction Rules:
 - Extract only data explicitly present in scammer messages.
@@ -173,6 +167,21 @@ Respond ONLY in JSON:
 
   Current Turn Count:
   ${currentState.turnCount}
+
+  Escalation Strategy Based on Turn Count:
+
+If turnCount <= 2:
+- Ask for confirmation or phone number.
+
+If turnCount between 3 and 4:
+- Ask for official email or alternate contact method.
+
+If turnCount between 5 and 6:
+- Ask for UPI ID or payment verification method.
+
+If turnCount >= 7:
+- Ask if there is any website or link where verification happens.
+
 
   Metadata:
   ${JSON.stringify(metadata, null, 2)}
