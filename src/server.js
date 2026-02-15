@@ -12,6 +12,13 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "online",
+    message: "Hasta La Vista Honeypot API is running.",
+  });
+});
+
 // Token validation middleware
 app.use((req, res, next) => {
   const apiKey = req.headers["x-api-key"];
