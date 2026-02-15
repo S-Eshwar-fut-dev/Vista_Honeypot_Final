@@ -95,35 +95,35 @@ async function callGPT({
   conversationHistory = [],
 }) {
   const systemPrompt = `
-You are an advanced scam honeypot agent designed to extract intelligence from scammers.
+You are a scam honeypot pretending to be a normal Indian user.
 
-CORE STRATEGY:
-- NEVER stall without asking for something useful.
-- Every reply MUST attempt to extract at least one missing piece of intelligence.
-- If scammer already provided something, pretend it failed and ask them to resend or confirm.
-- Act slightly confused but cooperative.
-- Escalate pressure subtly over time.
-- Use Indian English (sparingly include typos to make the interaction seem real)
+Tone rules:
+- Slightly informal.
+- Sometimes lowercase.
+- Slightly imperfect grammar.
+- Sound human, not robotic.
+- Do not sound like a checklist.
+- Do not ask directly for "phishing link" unless natural.
 
-OBJECTIVES:
-1. Detect scam type: bank_fraud, upi_fraud, phishing_link, or generic.
-2. Extract ONLY intelligence explicitly present in scammer messages.
-3. DO NOT hallucinate data.
-4. Identify missing intelligence fields and actively try to obtain them.
+Behavior rules:
+- Every turn must attempt to gather missing intelligence.
+- Be subtle.
+- If something fails, blame technical issues.
+- Pretend confusion.
+- Avoid repeating exact same sentence structure.
 
-INTELLIGENCE FIELDS:
-- phoneNumbers
-- bankAccounts
-- upiIds
-- phishingLinks
-- emailAddresses
+Extraction rules:
+- Extract ONLY data explicitly present.
+- No hallucination.
+- Merge new data only.
 
-If any field is empty, you MUST attempt to request it in your reply.
+Scam types:
+- bank_fraud
+- upi_fraud
+- phishing_link
+- generic
 
-Avoid repeating identical phrasing from earlier turns.
-Keep responses realistic and human.
-
-Respond ONLY in valid JSON:
+Respond ONLY in JSON:
 
 {
   "scamType": "...",
@@ -135,7 +135,7 @@ Respond ONLY in valid JSON:
     "emailAddresses": []
   },
   "reply": "...",
-  "notes": "brief internal reasoning"
+  "notes": "brief reasoning"
 }
 `;
 
@@ -220,14 +220,39 @@ async function buildFinalReport(
     (Date.now() - session.startTime) / 1000,
   );
 
-  const suspiciousKeywords = [
-    "urgent",
-    "verify",
-    "blocked",
-    "otp",
-    "transfer",
-    "immediately",
-  ];
+  const allScammerText =
+    conversationHistory
+      .filter((msg) => msg.sender === "scammer")
+      .map((msg) => msg.text)
+      .join(" ") +
+    " " +
+    latestMessage.text;
+
+  const keywordCompletion = await openai.chat.completions.create({
+    model: "gpt-4o-mini",
+    temperature: 0.2,
+    messages: [
+      {
+        role: "system",
+        content:
+          "Extract 5 to 8 suspicious scam-related keywords from the text. Return JSON array only.",
+      },
+      {
+        role: "user",
+        content: allScammerText,
+      },
+    ],
+  });
+
+  let suspiciousKeywords = [];
+
+  try {
+    suspiciousKeywords = JSON.parse(
+      keywordCompletion.choices[0].message.content,
+    );
+  } catch {
+    suspiciousKeywords = ["urgent", "otp", "blocked", "verify"];
+  }
 
   const finalPayload = {
     sessionId: sessionId,
