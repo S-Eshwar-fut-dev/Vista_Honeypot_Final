@@ -287,6 +287,7 @@ async function buildFinalReport(
       upiIds: session.extracted.upiIds,
       phishingLinks: session.extracted.phishingLinks,
       phoneNumbers: session.extracted.phoneNumbers,
+      emailAddresses: session.extracted.emailAddresses,
       suspiciousKeywords,
     },
     agentNotes: session.notes.join(" | "),
