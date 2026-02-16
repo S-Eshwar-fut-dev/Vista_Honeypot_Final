@@ -72,7 +72,7 @@ export async function handleMessage(body) {
   }
 
   // Decide if final report should be triggered
-  if (session.scamDetected && session.turnCount > 8) {
+  if (session.scamDetected && session.turnCount > 6) {
     session.finalTriggered = true;
     return await buildFinalReport(
       session,
