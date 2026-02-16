@@ -37,7 +37,7 @@ app.use((req, res, next) => {
 });
 
 // Main endpoint that responds to scam
-app.post("/api/message", async (req, res) => {
+app.post("/api", async (req, res) => {
   try {
     const result = await handleMessage(req.body);
 
