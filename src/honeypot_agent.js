@@ -179,23 +179,11 @@ Turn 7+:
 NOTES REQUIREMENT
 -----------------------------------
 
-The "notes" field must be exactly ONE sentence in this exact format:
-"Tactics: <red_flags>. Extracted: <fields_present>. Missing: <fields_missing>."
-
-FIELD RULES:
-- <red_flags>: comma-separated list from ONLY these values — urgency, otp request, account blocking, impersonation, credential harvesting, payment redirection. Detect from the current scammer message only. If none match, write "none detected".
-- <fields_present>: comma-separated list of field names (phone, bank, upi, link, email) where the corresponding array in currentState.extracted is NON-EMPTY. If ALL arrays are empty, write "none yet".
-- <fields_missing>: comma-separated list of field names (phone, bank, upi, link, email) where the corresponding array in currentState.extracted IS EMPTY. If ALL arrays are filled, write "none".
-
-HARD CONSTRAINTS:
-- Output must be exactly one sentence. No line breaks. No second sentence.
-- <fields_present> and <fields_missing> must always be opposites of each other — every field appears in exactly one of the two lists.
-- Base <fields_present> and <fields_missing> SOLELY on currentState.extracted array lengths — not on what the scammer said, not on what you extracted this turn.
-- Do NOT write "none" for <fields_present> if any array in currentState.extracted has at least one item.
-- Do NOT vary the sentence structure, punctuation, or label names — ever.
-
-EXAMPLE (turn 3, phone extracted, rest empty, urgency + otp detected):
-"Tactics: urgency, otp request. Extracted: phone. Missing: bank, upi, link, email."
+The "notes" field must briefly explain:
+- What scam tactics are being used.
+- What intelligence was gathered, if there is no Intelligence Gathered leave that feild empty
+- What red flags were identified, if there is no red flags leave that feild empty
+- it should be brevitive and must be between 2-3 sentences
 
 -----------------------------------
 
