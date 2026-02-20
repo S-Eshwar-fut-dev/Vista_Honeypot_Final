@@ -10,6 +10,17 @@ const openai = new OpenAI({
 
 const sessionStore = new Map();
 
+async function callWithRetry(fn, fallback, maxAttempts = 3) {
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (attempt === maxAttempts) return fallback;
+      await new Promise((res) => setTimeout(res, 1000 * attempt));
+    }
+  }
+}
+
 export async function handleMessage(body) {
   const { sessionId, message, conversationHistory = [], metadata = {} } = body;
 
@@ -230,14 +241,29 @@ If turnCount >= 7:
   ${JSON.stringify(metadata, null, 2)}
   `;
 
-  const completion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    temperature: 0.4,
-    messages: [
-      { role: "system", content: systemPrompt },
-      { role: "user", content: userPrompt },
-    ],
-  });
+  const fallbackCompletion = {
+    choices: [{
+      message: {
+        content: JSON.stringify({
+          scamType: currentState.scamType || "generic",
+          newExtractions: { phoneNumbers: [], bankAccounts: [], upiIds: [], phishingLinks: [], emailAddresses: [] },
+          reply: "One moment please, I am checking the information from my side.",
+          notes: "Fallback triggered due to JSON parsing error.",
+        })
+      }
+    }],
+  };
+  const completion = await callWithRetry(
+    () => openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      temperature: 0.4,
+      messages: [
+        { role: "system", content: systemPrompt },
+        { role: "user", content: userPrompt },
+      ],
+    }),
+    fallbackCompletion
+  );
 
   const content = completion.choices[0].message.content;
 
@@ -295,21 +321,27 @@ async function buildFinalReport(
     " " +
     latestMessage.text;
 
-  const keywordCompletion = await openai.chat.completions.create({
-    model: "gpt-4o-mini",
-    temperature: 0.2,
-    messages: [
-      {
-        role: "system",
-        content:
-          "Extract 5 to 8 suspicious scam-related keywords from the text. Return JSON array only.",
-      },
-      {
-        role: "user",
-        content: allScammerText,
-      },
-    ],
-  });
+  const keywordFallbackCompletion = {
+    choices: [{ message: { content: JSON.stringify(["urgent", "otp", "blocked", "verify"]) } }],
+  };
+  const keywordCompletion = await callWithRetry(
+    () => openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      temperature: 0.2,
+      messages: [
+        {
+          role: "system",
+          content:
+            "Extract 5 to 8 suspicious scam-related keywords from the text. Return JSON array only.",
+        },
+        {
+          role: "user",
+          content: allScammerText,
+        },
+      ],
+    }),
+    keywordFallbackCompletion
+  );
 
   let suspiciousKeywords = [];
 

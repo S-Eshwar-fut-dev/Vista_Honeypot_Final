@@ -37,7 +37,7 @@ flowchart LR
   Final --> Caller[Return final JSON]
 
 
-# Sequence (brief)
+# Sequence
 
 1. Client POST `/api` with header `x-api-key` and body `{ sessionId, message, conversationHistory, metadata }`.
 2. `server.js` authorizes and forwards to `handleMessage`.
@@ -48,7 +48,7 @@ flowchart LR
 
 
 
-# Session model (canonical)
+# Session model
 
 json
 {
@@ -94,14 +94,26 @@ json
 
 *All fields above are present in final payload to match evaluation expectations.*
 
----
-
-# Extraction strategy (short)
+# Extraction strategy 
 
 * Primary: strict LLM JSON extraction (`newExtractions` arrays).
 * Deterministic complement: regex-enabled normalization (phone, email, URL, UPI, bank acct) is used to normalize and dedupe before final payload.
 * Merge = union of sources (LLM + deterministic), normalized to canonical formats.
 
+# Error Handling Architecture
+
+The honeypot agent includes a lightweight reliability layer designed to ensure uninterrupted execution of the conversation workflow during external API failures.
+
+Component: callWithRetry()
+A generic retry wrapper responsible for executing OpenAI calls with exponential backoff.
+
+* callWithRetry(fn, fallback, maxAttempts = 3)
+* Wraps any OpenAI API call inside fn().
+* Retries up to 3 attempts with exponential backoff:
+* Attempt 1 → 1s
+* Attempt 2 → 2s
+* Returns the fallback on final failure.
+* Prevents crashes and ensures graceful degradation.
 
 # Escalation policy (turn-based prompts)
 

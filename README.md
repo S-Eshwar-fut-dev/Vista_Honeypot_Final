@@ -54,6 +54,7 @@ The honeypot uses:
 - Adaptive response generation
 - Strict JSON enforcement
 
+
 ### Escalation Phases
 
 | Turns | Strategy                                     |
@@ -64,6 +65,38 @@ The honeypot uses:
 | 7+    | Ask for verification link / site             |
 
 ---
+## 🔐 Reliability & Error Handling
+
+The honeypot agent includes a fault-tolerant error-handling layer to ensure stable behavior even under API instability or network fluctuations.
+
+Key mechanisms implemented:
+
+1. Exponential Backoff for OpenAI API Calls
+
+All outbound OpenAI calls are wrapped in a retry helper that attempts the request up to three times:
+
+Attempt 1 → 1 second delay
+
+Attempt 2 → 2 seconds delay
+
+Attempt 3 → fallback response returned
+
+This prevents transient API failures from breaking the conversation flow.
+
+2. Guaranteed Fallback JSON
+
+If all retries fail, the system returns a deterministic fallback JSON response, ensuring:
+
+->valid schema
+->no conversation interruption
+->predictable downstream behavior
+->compliance with GUVI’s evaluation contract
+
+3. Safe Keyword Extraction
+
+Final keyword extraction also uses the same retry mechanism and falls back to a stable keyword set:["urgent", "otp", "blocked", "verify"]
+
+This ensures the final intelligence report is complete even during partial failures.
 
 ## 📦 Intelligence Extracted
 
@@ -76,12 +109,13 @@ The honeypot uses:
   "emailAddresses": [],
   "suspiciousKeywords": []
 }
-```
+
 
 All fields are mandatory in final structured output.
 
 ⚙️ Setup & Run
 git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
+
 cd vista_honeypot
 npm install
 
