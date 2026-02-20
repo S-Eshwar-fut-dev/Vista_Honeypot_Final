@@ -28,8 +28,14 @@ To build a conversational AI honeypot that:
 ## 🧠 Architecture Overview
 
 src/
-├── server.js → Express server & API key middleware
-├── honeypot_agent.js → Core intelligence engine
+├── server.js            # Express API, x-api-key middleware, main endpoints
+├── honeypot_agent.js    # Session lifecycle, GPT orchestration, merging, final report
+.env.example
+docs/
+└── architecture.md
+requirements.txt
+README.md
+package.json
 
 ### Core Components
 
