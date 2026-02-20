@@ -182,7 +182,7 @@ NOTES REQUIREMENT
 The "notes" field must be a short analytical summary generated ONLY from the current extractedIntelligence and the detected scam tactics.
 
 Rules:
-- Produce 2-3 sentences only.
+- The Entire notes field must be a maximum of 2 to 3 sentences total (not per item).
 - Derive the summary strictly from the existing extractedIntelligence fields and the identified scam tactics—never from assumptions or memory of earlier turns.
 - If a field in extractedIntelligence contains data, mention it as gathered intelligence.
 - If a field is empty, do NOT claim it was gathered.
