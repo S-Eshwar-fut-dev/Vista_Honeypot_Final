@@ -71,32 +71,43 @@ The honeypot agent includes a fault-tolerant error-handling layer to ensure stab
 
 Key mechanisms implemented:
 
-1. Exponential Backoff for OpenAI API Calls
+Exponential Backoff for OpenAI API Calls
 
 All outbound OpenAI calls are wrapped in a retry helper that attempts the request up to three times:
 
-Attempt 1 → 1 second delay
+- Attempt 1 → 1 second delay
+- Attempt 2 → 2 seconds delay
+- Attempt 3 → fallback response returned
+- This prevents transient API failures from breaking the conversation flow.
 
-Attempt 2 → 2 seconds delay
-
-Attempt 3 → fallback response returned
-
-This prevents transient API failures from breaking the conversation flow.
-
-2. Guaranteed Fallback JSON
+Guaranteed Fallback JSON
 
 If all retries fail, the system returns a deterministic fallback JSON response, ensuring:
 
-->valid schema
-->no conversation interruption
-->predictable downstream behavior
-->compliance with GUVI’s evaluation contract
+- valid schema
+- no conversation interruption
+- predictable downstream behavior
+- compliance with GUVI’s evaluation contract
 
-3. Safe Keyword Extraction
+Safe Keyword Extraction
 
 Final keyword extraction also uses the same retry mechanism and falls back to a stable keyword set:["urgent", "otp", "blocked", "verify"]
 
 This ensures the final intelligence report is complete even during partial failures.
+
+## ⚙️ Setup & Run
+
+git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
+cd project_name
+npm install/npm i
+
+create .env
+OPENAI_API_KEY=your_key
+API_KEY=THE_HASTA_LA_VISTA_KEY
+PORT=3000
+
+Run: 
+node src/server.js
 
 ## 📦 Intelligence Extracted
 
@@ -110,19 +121,6 @@ This ensures the final intelligence report is complete even during partial failu
   "suspiciousKeywords": []
 }
 
-
 All fields are mandatory in final structured output.
 
-⚙️ Setup & Run
-git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
 
-cd vista_honeypot
-npm install
-
-create .env
-OPENAI_API_KEY=your_key
-API_KEY=THE_HASTA_LA_VISTA_KEY
-PORT=3000
-
-Run: 
-node src/server.js
