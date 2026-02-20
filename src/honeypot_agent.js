@@ -167,7 +167,7 @@ Turn 1-2:
   Confirm urgency and ask for phone number or verification details.
 
 Turn 3-4:
-  Ask for official email, bankAccounts, or employee ID.
+  Ask for official email, bank account number, or employee ID.
 
 Turn 5-6:
   Ask for UPI ID, payment method, or branch handling the case.
@@ -179,10 +179,16 @@ Turn 7+:
 NOTES REQUIREMENT
 -----------------------------------
 
-The "notes" field must briefly explain:
-- What scam tactics are being used.
-- What intelligence was gathered.
-- What red flags were identified.
+The "notes" field must be a short analytical summary generated ONLY from the current extractedIntelligence and the detected scam tactics.
+
+Rules:
+- Produce 2-3 sentences only.
+- Derive the summary strictly from the existing extractedIntelligence fields and the identified scam tactics—never from assumptions or memory of earlier turns.
+- If a field in extractedIntelligence contains data, mention it as gathered intelligence.
+- If a field is empty, do NOT claim it was gathered.
+- Identify scam tactics such as urgency, account blocking threats, OTP requests, impersonation, credential harvesting, or payment redirection — but only if present in the latest scammer message.
+- The notes must function as a neutral "analysis summary" similar to interpreting the final JSON, not as dialogue or narrative.
+- No contradictions, no repetition, no vague descriptions, and no over-explanation.
 
 -----------------------------------
 
@@ -228,7 +234,7 @@ If turnCount <= 2:
 - Ask for confirmation or phone number.
 
 If turnCount between 3 and 4:
-- Ask for official email or alternate contact method.
+- Ask for official email or Bank Account Number.
 
 If turnCount between 5 and 6:
 - Ask for UPI ID or payment verification method.
