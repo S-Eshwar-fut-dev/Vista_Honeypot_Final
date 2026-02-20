@@ -326,6 +326,7 @@ async function buildFinalReport(
     scamDetected: session.scamDetected,
     scamType: session.scamType,
     totalMessagesExchanged: totalMessages,
+    engagementDurationSeconds: engagementDurationSeconds,
     extractedIntelligence: {
       bankAccounts: session.extracted.bankAccounts,
       upiIds: session.extracted.upiIds,
