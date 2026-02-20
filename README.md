@@ -97,17 +97,17 @@ This ensures the final intelligence report is complete even during partial failu
 
 ## ⚙️ Setup & Run
 
-git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
-cd project_name
-npm install/npm i
+- git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
+- cd project_name
+- npm install/npm i
 
-create .env
-OPENAI_API_KEY=your_key
-API_KEY=THE_HASTA_LA_VISTA_KEY
-PORT=3000
+- create .env
+- OPENAI_API_KEY=your_key
+- API_KEY=THE_HASTA_LA_VISTA_KEY
+- PORT=3000
 
 Run: 
-node src/server.js
+- node src/server.js
 
 ## 📦 Intelligence Extracted
 
