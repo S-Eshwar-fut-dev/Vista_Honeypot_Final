@@ -237,10 +237,10 @@ If turnCount between 3 and 4:
 - Ask for official email or Bank Account Number.
 
 If turnCount between 5 and 6:
-- Ask for UPI ID or payment verification method.
+- Ask for UPI ID or Website Link.
 
 If turnCount >= 7:
-- Ask if there is any website or link where verification happens.
+- Ask if there is any payment verification method or other ways to verify.
 
 
   Metadata:
