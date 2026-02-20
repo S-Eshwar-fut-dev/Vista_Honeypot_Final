@@ -179,10 +179,10 @@ Turn 7+:
 NOTES REQUIREMENT
 -----------------------------------
 
-The "notes" field must briefly explain the scam tactics being used, the intelligence gathered (leave blank if none), and the red flags identified (leave blank if none). 
-- Notes must be concise and limited to 2 - 3 sentences only.
-- Do not contradict extracted intelligence, and do not repeat information across sentences. 
-- Notes must stay objective, non-narrative, and avoid speculation.
+The "notes" field must briefly explain:
+- What scam tactics are being used.
+- What intelligence was gathered.
+- What red flags were identified.
 
 -----------------------------------
 
