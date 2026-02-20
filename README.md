@@ -81,7 +81,7 @@ The honeypot uses:
 All fields are mandatory in final structured output.
 
 ⚙️ Setup & Run
-git clone https://github.com/Arjun256900/vista_honeypot.git
+git clone https://github.com/S-Eshwar-fut-dev/Vista_Honeypot_Final
 cd vista_honeypot
 npm install
 
