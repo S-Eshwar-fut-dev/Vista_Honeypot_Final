@@ -17,7 +17,7 @@ This system is designed for adaptive scam detection across bank fraud, UPI fraud
 To build a conversational AI honeypot that:
 
 - Detects scam intent automatically
-- Engages scammers for ≥ 6 turns
+- Engages scammers for ≥ 8 turns
 - Extracts structured intelligence
 - Identifies red-flag patterns
 - Sends final intelligence to a secure evaluation endpoint
