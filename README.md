@@ -108,6 +108,9 @@ This ensures the final intelligence report is complete even during partial failu
 Run: 
 - node src/server.js
 
+📄 License
+MIT License — see LICENSE
+
 ## 📦 Intelligence Extracted
 
 ```json
@@ -122,7 +125,5 @@ Run:
 
 All fields are mandatory in final structured output.
 
-📄 License
-MIT License — see LICENSE
 
 
