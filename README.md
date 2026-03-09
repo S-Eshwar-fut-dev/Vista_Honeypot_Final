@@ -122,4 +122,7 @@ Run:
 
 All fields are mandatory in final structured output.
 
+📄 License
+MIT License — see LICENSE
+
 
